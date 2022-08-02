@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any, Optional, Type, Union
+from typing import Any, Optional, Type, Union, TypeVar
 from weakref import WeakSet
 
 import aiormq.abc
@@ -173,6 +173,9 @@ class RobustConnection(Connection, AbstractRobustConnection):
         return channel
 
 
+RobustConnectionType = TypeVar("RobustConnectionType", bound=AbstractRobustConnection)
+
+
 async def connect_robust(
     url: Union[str, URL, None] = None,
     *,
@@ -186,9 +189,9 @@ async def connect_robust(
     ssl_options: Optional[SSLOptions] = None,
     timeout: TimeoutType = None,
     client_properties: Optional[FieldTable] = None,
-    connection_class: Type[AbstractRobustConnection] = RobustConnection,
+    connection_class: Type[RobustConnectionType] = RobustConnection,
     **kwargs: Any
-) -> AbstractRobustConnection:
+) -> RobustConnectionType:
 
     """Make connection to the broker.
 
@@ -293,4 +296,5 @@ async def connect_robust(
 __all__ = (
     "RobustConnection",
     "connect_robust",
+    "RobustConnectionType",
 )
